@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import Generarpeticion from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
-import { Row, Col,Spin,FloatButton  } from 'antd';
+import { Row, Col,Spin,FloatButton,Divider } from 'antd';
 import { SyncOutlined,QuestionCircleOutlined,PlusOutlined  } from '@ant-design/icons';
 import './home.css'
 
@@ -22,11 +22,12 @@ const Home: React.FC = () => {
       detalle_tags:TagsType[];
       
     }
-    const customIcon = (
-//   <SyncOutlined style={{ fontSize: 48, color: '#2ca9ff' }} spin />
-<SyncOutlined style={{ fontSize: 48, color: "rgba(32,93,93,255)" }} spin />
+  const customIcon = (
+    //   <SyncOutlined style={{ fontSize: 48, color: '#2ca9ff' }} spin />
+    <SyncOutlined style={{ fontSize: 48, color: "rgba(32,93,93,255)" }} spin />
 
-);
+    );
+ 
   useEffect(() => {
 
         
@@ -57,49 +58,62 @@ const Home: React.FC = () => {
     return (
       <div>
         
-        {/* {loading ? (
-                    <Skeleton.Input active size="small" />
-                ) : (
-        <Row gutter={[16, 16]}>
-            {datasistemas.map((item) => (
-            <Col key={item.id} xs={24} sm={12} md={8}>
-                <CardSystem data={item} />
-            </Col>
-            ))}
-
-        </Row>)} */}
-        {
+        
+        {/* {
             loading ?(
                 // <Spin percent= 'auto'  size="large" fullscreen className="custom-spinner"  />
                 <Spin indicator={customIcon} fullscreen />
             ):(
                 <Row gutter={[16, 16]}>
-            {datasistemas.map((item) => (
-            <Col key={item.id} xs={24} sm={12} md={8}>
-                <CardSystem data={item} />
-            </Col>
-            ))}
-        </Row>
+                  {datasistemas.map((item) => (
+                  <Col key={item.id} xs={24} sm={12} md={8}>
+                      <CardSystem data={item} />
+                  </Col>
+                  ))}
+              </Row>
             )
-        }
+        } */}
+
+        {loading ? (
+            <Spin indicator={customIcon} fullscreen />
+          ) : (
+            <div>
+              {(() => {
+                // Agrupamos los items en filas de a 3
+                const chunkedData = [];
+                for (let i = 0; i < datasistemas.length; i += 3) {
+                  chunkedData.push(datasistemas.slice(i, i + 3));
+                }
+
+                return chunkedData.map((rowItems, rowIndex) => (
+                  <div key={rowIndex}>
+                    <Row gutter={[16, 16]}>
+                      {rowItems.map((item) => (
+                        <Col key={item.id} xs={24} sm={12} md={8}>
+                          <CardSystem data={item} />
+                        </Col>
+                      ))}
+                    </Row>
+                    {rowIndex !== chunkedData.length - 1 && <Divider />} {/* Evita el Divider en la última fila */}
+                  </div>
+                ));
+              })()}
+            </div>
+          )}
+
+        
         <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
             <FloatButton  
                 type="primary" 
                 icon={<PlusOutlined  />} 
-                // tooltip={{
-                //     // tooltipProps is supported starting from version 5.25.0.
-                //     title: 'Since 5.25.0+',
-                //     color: 'blue',
-                //     placement: 'top',
-                // }}
+    
                  tooltip={<div>Agregar Proyecto</div>}
             />
             
             <FloatButton.BackTop  />
         </FloatButton.Group>
         
-        {/* <FloatButton.BackTop /> */}
-
+       
       </div>
     ) 
   }

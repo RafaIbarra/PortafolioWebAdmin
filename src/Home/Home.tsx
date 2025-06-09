@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react'
+import { useNavigate } from "react-router-dom";
 import Generarpeticion from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
 import { Row, Col,Spin,FloatButton,Divider } from 'antd';
@@ -8,6 +9,10 @@ import './home.css'
 const Home: React.FC = () => {
   const [datasistemas, setDatasistemas] = useState<DataType[]>([]); 
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate()
+  const registrar =()=>{
+    navigate('/Registro')
+  }
   interface TagsType{
     id :number,
     Tag:string;
@@ -41,7 +46,7 @@ const Home: React.FC = () => {
         const result = await Generarpeticion(endpoint, "GET", body);
         if (result.resp === 200) {
         const data=result.data
-        console.log(data)
+        //console.log(data)
         setDatasistemas(result.data)
             
         }
@@ -107,7 +112,9 @@ const Home: React.FC = () => {
                 type="primary" 
                 icon={<PlusOutlined  />} 
     
-                 tooltip={<div>Agregar Proyecto</div>}
+                tooltip={<div>Agregar Proyecto</div>}
+                onClick={registrar}
+
             />
             
             <FloatButton.BackTop  />

@@ -1,18 +1,31 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useContext} from 'react'
 import { useNavigate } from "react-router-dom";
 import Generarpeticion from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
 import { Row, Col,Spin,FloatButton,Divider } from 'antd';
 import { SyncOutlined,QuestionCircleOutlined,PlusOutlined  } from '@ant-design/icons';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { UserContext } from '../context/UserContext';
 import './home.css'
 
 const Home: React.FC = () => {
+  const { modulosistema,setModuloSistema,addModulo } = useContext(UserContext)!;
   const [datasistemas, setDatasistemas] = useState<DataType[]>([]); 
+  const [idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
   const [loading, setLoading] = useState(true);
+ 
   const navigate=useNavigate()
+
+   const handleChangeProyecto = (nuevoId: number) => {
+      
+    setIdProyecto(nuevoId);
+  };
   const registrar =()=>{
+    handleChangeProyecto(0)
+    addModulo({ title: 'Nuevo Registro' });
     navigate('/Registro')
   }
+  
   interface TagsType{
     id :number,
     Tag:string;
@@ -32,12 +45,16 @@ const Home: React.FC = () => {
     <SyncOutlined style={{ fontSize: 48, color: "rgba(32,93,93,255)" }} spin />
 
     );
- 
+  useEffect(() => {
+    setModuloSistema([])
+    addModulo({ title: 'Home' });
+  }, []);
   useEffect(() => {
 
         
         
     const cargardatos = async () => {
+      
         setLoading(true); 
         const body = {};
           
@@ -46,7 +63,7 @@ const Home: React.FC = () => {
         const result = await Generarpeticion(endpoint, "GET", body);
         if (result.resp === 200) {
         const data=result.data
-        //console.log(data)
+        console.log(data)
         setDatasistemas(result.data)
             
         }

@@ -27,7 +27,7 @@ const CardSystem: React.FC<CardSystemProps> = ({ data }) => {
    const actions: React.ReactNode[] = [
       <EditOutlined key="edit"  onClick={() => handleChangeProyecto(data.id)} />,
     //   <SettingOutlined key="setting" />,
-      <EllipsisOutlined key="ellipsis" />,
+      
     ];
 
     const handleChangeProyecto = (nuevoId: number) => {

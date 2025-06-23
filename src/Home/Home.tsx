@@ -1,6 +1,7 @@
 import React,{useEffect,useState,useContext} from 'react'
 import { useNavigate } from "react-router-dom";
-import Generarpeticion from '../Apis/apipeticiones';
+
+import { useGenerarPeticion } from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
 import { Row, Col,Spin,FloatButton,Divider } from 'antd';
 import { SyncOutlined,QuestionCircleOutlined,PlusOutlined  } from '@ant-design/icons';
@@ -9,6 +10,7 @@ import { UserContext } from '../context/UserContext';
 import './home.css'
 
 const Home: React.FC = () => {
+  const generarPeticion = useGenerarPeticion();
   const { modulosistema,setModuloSistema,addModulo } = useContext(UserContext)!;
   const [datasistemas, setDatasistemas] = useState<DataType[]>([]); 
   const [idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
@@ -60,7 +62,7 @@ const Home: React.FC = () => {
           
         await new Promise(resolve => setTimeout(resolve, 4000));
         const endpoint = `ListarProyectos/0/`;
-        const result = await Generarpeticion(endpoint, "GET", body);
+        const result = await generarPeticion(endpoint, "GET", body);
         if (result.resp === 200) {
         const data=result.data
         console.log(data)

@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 
-function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+function useLocalStorage<T>(key: string, initialValue?: T): [
+  T,
+  (value: T) => void,
+  () => T | null // Función "obtener" que devuelve el valor actual sin estado
+] 
+{
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -20,7 +25,17 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => voi
     }
   };
 
-  return [storedValue, setValue];
+  const obtener = (): T | null => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } catch (error) {
+      console.warn(error);
+      return null;
+    }
+  };
+
+  return [storedValue, setValue,obtener];
 }
 
 export default useLocalStorage;

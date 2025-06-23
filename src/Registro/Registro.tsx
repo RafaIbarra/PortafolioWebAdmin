@@ -2,7 +2,7 @@ import React,{useEffect,useState,useCallback } from 'react'
 import { useNavigate } from "react-router-dom";
 import {Form,Input, Upload, Row, Col,Tabs,Select,Button,Space,Spin,message,Popconfirm   } from 'antd';
 import { PlusOutlined,MinusCircleOutlined,DownloadOutlined,SyncOutlined,RollbackOutlined,DeleteOutlined  } from '@ant-design/icons';
-import Generarpeticion from '../Apis/apipeticiones';
+import { useGenerarPeticion } from '../Apis/apipeticiones';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 import type { UploadFile } from 'antd'; // Importación correcta para tipos
@@ -383,6 +383,7 @@ const FormsTags: React.FC<FormTagsProps> = ({ detalle_tags, onUpdate }) => {
     );
  
 const Registro: React.FC = () => {
+    const generarPeticion = useGenerarPeticion();
     const [componentSize, setComponentSize] = useState('small')
     const [idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
     const [loading, setLoading] = useState(true);
@@ -489,7 +490,7 @@ const Registro: React.FC = () => {
     const confirm = async () =>
     {
      const endpoint = `EliminarProyecto/${idProyecto}/`;
-        const result = await Generarpeticion(endpoint, "DELETE", '');
+        const result = await generarPeticion(endpoint, "DELETE", '');
         console.log(result)
         if (result.resp==200){
            
@@ -568,7 +569,7 @@ const Registro: React.FC = () => {
                 
                 await new Promise(resolve => setTimeout(resolve, 4000));
                 const endpoint = `ListarProyectos/${idProyecto}/`;
-                const result = await Generarpeticion(endpoint, "GET", body);
+                const result = await generarPeticion(endpoint, "GET", body);
                 if (result.resp === 200) {
                 const data=result.data
                 
@@ -600,7 +601,7 @@ const Registro: React.FC = () => {
     const registrar= async ()=>{
         console.log(proyectodata)
         const endpoint = `RegistrarProyecto`;
-        const result = await Generarpeticion(endpoint, "POST", proyectodata);
+        const result = await generarPeticion(endpoint, "POST", proyectodata);
         console.log(result)
         if (result.resp==201){
            success()
@@ -611,7 +612,7 @@ const Registro: React.FC = () => {
         }
     }
     const atras=()=>{
-    navigate('/')
+    navigate('/Home')
     }
     
 

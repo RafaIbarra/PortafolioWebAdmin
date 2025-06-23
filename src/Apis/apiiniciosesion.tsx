@@ -14,7 +14,7 @@ async function InicioSesionApi( password: any): Promise<PeticionResponse> {
     const endpoint='InicioSesion'
     const formData = new FormData();
     formData.append('password', password)
-    console.log('formData',formData)
+    
 
     const requestOptions = {
         method: 'POST',

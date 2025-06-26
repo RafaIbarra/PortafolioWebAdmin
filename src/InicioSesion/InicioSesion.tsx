@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input, Descriptions, message, Spin } from "antd";
-import { useNavigate } from "react-router-dom";
-import { SyncOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Descriptions, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../Componentes/Loading';
 import InicioSesionApi from '../Apis/apiiniciosesion';
 import { usePeticionComprobacion } from '../Apis/apicomprobarsesion';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -32,9 +32,6 @@ const InicioSesion: React.FC = () => {
         });
     };
 
-    const customIcon = (
-        <SyncOutlined style={{ fontSize: 48, color: "rgba(32,93,93,255)" }} spin />
-    );
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const pass = values.password
@@ -80,7 +77,7 @@ const InicioSesion: React.FC = () => {
         }}>
 
             {contextHolder}
-            {loading ? (<Spin indicator={customIcon} fullscreen />) : (
+            {loading ? (<Loading fullscreen />) : (
                 <>
                     <Descriptions title="INGRESO AL SISTEMA" />
                     <Form

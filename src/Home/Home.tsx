@@ -1,18 +1,20 @@
-import React,{useEffect,useState,useContext} from 'react'
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
-import { Row, Col,Spin,FloatButton,Divider } from 'antd';
-import { SyncOutlined,PlusOutlined  } from '@ant-design/icons';
+import Loading from '../Componentes/Loading';
+import { Row, Col, FloatButton, Divider } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { UserContext } from '../context/UserContext';
+import type { ProyectoResumen } from '../types/Proyecto';
 import './home.css'
 
 const Home: React.FC = () => {
   const generarPeticion = useGenerarPeticion();
-  const { setModuloSistema,addModulo } = useContext(UserContext)!;
-  const [datasistemas, setDatasistemas] = useState<DataType[]>([]); 
+  const { setModuloSistema, addModulo } = useContext(UserContext)!;
+  const [datasistemas, setDatasistemas] = useState<ProyectoResumen[]>([]);
   const [__idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
   const [loading, setLoading] = useState(true);
  
@@ -28,25 +30,6 @@ const Home: React.FC = () => {
     navigate('/Registro')
   }
   
-  interface TagsType{
-    id :number,
-    Tag:string;
-  }
-  interface DataType {
-     
-      Sistema: string;
-      Logo: string;
-      Descripcion: string;
-      id: number; 
-      fecha_registro:string;
-      detalle_tags:TagsType[];
-      
-    }
-  const customIcon = (
-    
-    <SyncOutlined style={{ fontSize: 48, color: "rgba(32,93,93,255)" }} spin />
-
-    );
   useEffect(() => {
     setModuloSistema([])
     addModulo({ title: 'Home' });
@@ -83,23 +66,9 @@ const Home: React.FC = () => {
       <div>
         
         
-        {/* {
-            loading ?(
-                // <Spin percent= 'auto'  size="large" fullscreen className="custom-spinner"  />
-                <Spin indicator={customIcon} fullscreen />
-            ):(
-                <Row gutter={[16, 16]}>
-                  {datasistemas.map((item) => (
-                  <Col key={item.id} xs={24} sm={12} md={8}>
-                      <CardSystem data={item} />
-                  </Col>
-                  ))}
-              </Row>
-            )
-        } */}
 
         {loading ? (
-            <Spin indicator={customIcon} fullscreen />
+            <Loading fullscreen />
           ) : (
             <div>
               {(() => {

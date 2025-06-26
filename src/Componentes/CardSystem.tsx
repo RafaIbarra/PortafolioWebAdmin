@@ -1,23 +1,13 @@
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { EditOutlined } from '@ant-design/icons';
-import { Avatar, Card,Tag,Row, Col  } from 'antd';
+import { Avatar, Card, Tag, Row, Col } from 'antd';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-interface TagsType{
-    id :number,
-    Tag:string;
-  }
-interface CardData {
-     Sistema: string;
-      Logo: string;
-      Descripcion: string;
-      id: number; 
-      fecha_registro:string;
-      detalle_tags:TagsType[];
-}
+import type { ProyectoResumen } from '../types/Proyecto';
+
 interface CardSystemProps {
-  data: CardData;
+  data: ProyectoResumen;
 }
 
 const CardSystem: React.FC<CardSystemProps> = ({ data }) => {

@@ -1,5 +1,5 @@
 import React, { useState,useContext } from 'react';
-import { EditOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { Avatar, Card,Tag,Row, Col  } from 'antd';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ interface CardSystemProps {
 }
 
 const CardSystem: React.FC<CardSystemProps> = ({ data }) => {
-   const [idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
+   const [__idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
     const { addModulo } = useContext(UserContext)!;
     const navigate=useNavigate()
    const actions: React.ReactNode[] = [
@@ -32,10 +32,11 @@ const CardSystem: React.FC<CardSystemProps> = ({ data }) => {
 
     const handleChangeProyecto = (nuevoId: number) => {
      addModulo({ title: `Actualizar Registro/${nuevoId}/`});
+      
       setIdProyecto(nuevoId);
       navigate('/Registro')
   };
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading] = useState<boolean>(false);
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
         let color = '#';

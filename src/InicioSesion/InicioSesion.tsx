@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useContext} from 'react'
+import React,{useEffect,useState} from 'react'
 import { Button,  Form, Input,Descriptions,message,Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { SyncOutlined } from '@ant-design/icons';
@@ -15,12 +15,12 @@ type FieldType = {
 
 
 const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-//   console.log('Failed:', errorInfo);
+   console.log('Failed:', errorInfo);
 };
 const InicioSesion: React.FC = () => {
     const generarcomprobacion = usePeticionComprobacion();
     const [messageApi, contextHolder] = message.useMessage();
-    const [datasesion, setDatasesion] = useLocalStorage<String>('datasesion', '');
+    const [__datasesion, setDatasesion] = useLocalStorage<String>('datasesion', '');
     const [loading, setLoading] = useState(true);
     const navigate=useNavigate()
     const error = (msg:any) => {

@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
 import { Row, Col,Spin,FloatButton,Divider } from 'antd';
-import { SyncOutlined,QuestionCircleOutlined,PlusOutlined  } from '@ant-design/icons';
+import { SyncOutlined,PlusOutlined  } from '@ant-design/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { UserContext } from '../context/UserContext';
 import './home.css'
 
 const Home: React.FC = () => {
   const generarPeticion = useGenerarPeticion();
-  const { modulosistema,setModuloSistema,addModulo } = useContext(UserContext)!;
+  const { setModuloSistema,addModulo } = useContext(UserContext)!;
   const [datasistemas, setDatasistemas] = useState<DataType[]>([]); 
-  const [idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
+  const [__idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
   const [loading, setLoading] = useState(true);
  
   const navigate=useNavigate()

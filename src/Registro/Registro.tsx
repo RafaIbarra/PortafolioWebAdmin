@@ -8,12 +8,12 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import type { UploadFile } from 'antd'; // Importación correcta para tipos
 const { TextArea } = Input;
 const { Option } = Select;
-const normFile = (e: any) => {
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e?.fileList;
-};
+// const normFile = (e: any) => {
+//   if (Array.isArray(e)) {
+//     return e;
+//   }
+//   return e?.fileList;
+// };
 
 type SizeType = Parameters<typeof Form>[0]['size'];
 
@@ -67,7 +67,7 @@ interface FormBackendProps {
 
 // 3. Componente FormBackend (puede estar en el mismo archivo o separado)
 const FormBackend: React.FC<FormBackendProps> = ({ detalle_backend, onUpdate }) => {
-    const [componentSize, setComponentSize] = useState('small')
+    const [componentSize] = useState('small')
     return (
             <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <Form
@@ -149,7 +149,7 @@ interface FormFrontedProps {
 }
 
 const FormFrontend: React.FC<FormFrontedProps> = ({ detalle_frontend, onUpdate }) => {
-    const [componentSize, setComponentSize] = useState('small')
+    const [componentSize] = useState('small')
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <Form
@@ -225,7 +225,7 @@ interface FormMovilProps {
   onUpdate: (campo: keyof DetalleMovil, valor: string) => void;
 }
 const FormMovil: React.FC<FormMovilProps> = ({ detalle_movil, onUpdate }) => {
-    const [componentSize, setComponentSize] = useState('small')
+    const [componentSize] = useState('small')
     return( 
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <Form
@@ -384,8 +384,8 @@ const FormsTags: React.FC<FormTagsProps> = ({ detalle_tags, onUpdate }) => {
  
 const Registro: React.FC = () => {
     const generarPeticion = useGenerarPeticion();
-    const [componentSize, setComponentSize] = useState('small')
-    const [idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
+    const [componentSize] = useState('small')
+    const [idProyecto] = useLocalStorage<number>('id_proyecto', 0);
     const [loading, setLoading] = useState(true);
     const [deletequestion,setDeletequestion]=useState(false)
     const [messageApi, contextHolder] = message.useMessage();

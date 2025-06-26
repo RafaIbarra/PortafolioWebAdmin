@@ -15,7 +15,7 @@ type FieldType = {
 
 
 const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
+//   console.log('Failed:', errorInfo);
 };
 const InicioSesion: React.FC = () => {
     const generarcomprobacion = usePeticionComprobacion();
@@ -40,7 +40,7 @@ const InicioSesion: React.FC = () => {
 
         );
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        console.log(values.password);
+        
         const pass=values.password
         const datos = await InicioSesionApi(pass)
         if (datos.resp===401){
@@ -66,7 +66,7 @@ const InicioSesion: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 4000));
             
             const result = await generarcomprobacion();
-            console.log('result: ',result)
+            
             if (result.resp === 200) {
                 setLoading(false); 
                 navigate('/Home')

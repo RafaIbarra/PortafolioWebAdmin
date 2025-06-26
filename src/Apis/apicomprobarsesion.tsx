@@ -16,7 +16,7 @@ export function usePeticionComprobacion() {
     let resp = 0;
     
     const datasesion = obtenerDatos() as string
-    console.log(datasesion)
+    
     const endpoint='VerificarSesion'
     
     const  requestOptions = {

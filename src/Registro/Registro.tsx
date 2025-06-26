@@ -491,7 +491,7 @@ const Registro: React.FC = () => {
     {
      const endpoint = `EliminarProyecto/${idProyecto}/`;
         const result = await generarPeticion(endpoint, "DELETE", '');
-        console.log(result)
+        // console.log(result)
         if (result.resp==200){
            
            atras()
@@ -589,7 +589,7 @@ const Registro: React.FC = () => {
                 }
                 else{
                     
-                    console.log(result)
+                    // console.log(result)
                 }
             }
             setLoading(false);
@@ -599,10 +599,10 @@ const Registro: React.FC = () => {
     
     }, []);
     const registrar= async ()=>{
-        console.log(proyectodata)
+        
         const endpoint = `RegistrarProyecto`;
         const result = await generarPeticion(endpoint, "POST", proyectodata);
-        console.log(result)
+        
         if (result.resp==201){
            success()
            atras()

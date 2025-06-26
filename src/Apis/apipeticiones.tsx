@@ -16,7 +16,7 @@ export function useGenerarPeticion() {
     let resp = 0;
     
     const datasesion = obtenerDatos() as string
-    console.log(datasesion)
+    
   
     let requestOptions: RequestInit;
   
@@ -55,9 +55,9 @@ export function useGenerarPeticion() {
           }
       
       // Para depurar:
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
+      // for (let pair of formData.entries()) {
+      //   console.log(`${pair[0]}:`, pair[1]);
+      // }
       
       
       requestOptions = {

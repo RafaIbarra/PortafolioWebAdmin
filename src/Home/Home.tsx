@@ -64,14 +64,14 @@ const Home: React.FC = () => {
         const endpoint = `ListarProyectos/0/`;
         const result = await generarPeticion(endpoint, "GET", body);
         if (result.resp === 200) {
-        const data=result.data
-        console.log(data)
+        // const data=result.data
+        // console.log(data)
         setDatasistemas(result.data)
             
         }
         else{
             
-            console.log(result)
+            // console.log(result)
         }
         setLoading(false);
     };

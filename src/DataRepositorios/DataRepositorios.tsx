@@ -2,9 +2,9 @@ import React,{useEffect,useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import { SyncOutlined} from '@ant-design/icons';
-import { Spin,Table, Tooltip} from 'antd';
+import { Spin,Table, Tooltip,Tabs,Form} from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
-
+type SizeType = Parameters<typeof Form>[0]['size'];
 interface DataTypePorcentajes {
   key: React.Key;
   lenguaje: string;
@@ -24,6 +24,8 @@ const columns: TableColumnsType<DataTypePorcentajes> = [
     title: 'Porcentaje',
     dataIndex: 'valor',
     sorter: (a, b) => a.valor - b.valor,
+    render: (text: string) => (
+            <span >{text} %</span>)
   }
   
 ];
@@ -104,8 +106,9 @@ const columnsrepositorios: TableColumnsType<DataTypeRespositorios> = [
 const DataRepositorios: React.FC = () => {
      const [loading, setLoading] = useState(true);
      const [dataporcentajes,setDataporcentajes]=useState<DataTypePorcentajes[]>([]);
-    
+     const [componentSize] = useState('small')
      const [processedData, setProcessedData] = useState<DataTypeRespositorios[]>([]);
+     const [fechaactualizacion,setFechaactualizacion]=useState(null)
      const generarPeticion = useGenerarPeticion();
      const navigate=useNavigate()
 
@@ -140,7 +143,7 @@ const DataRepositorios: React.FC = () => {
              setDataporcentajes(data.porcentajes)
             
              setProcessedData(prepareDataWithRowSpans(data.detalles));
-            
+             setFechaactualizacion(data.actualizacion)
                 
             }
             else{
@@ -160,14 +163,53 @@ const DataRepositorios: React.FC = () => {
                       ) : 
                       (
                         <>
-                        <Table<DataTypePorcentajes> columns={columns} dataSource={dataporcentajes} onChange={onChange} size="small"/>
-                        <Table<DataTypeRespositorios>
+                        
+                        <span> Utima Actualizacion: {fechaactualizacion} </span>
+                        <a
+                           href="https://github.com/RafaIbarra" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                          https://github.com/RafaIbarra
+                        </a>
+
+                        <Tabs
+                         type="card"
+                        //centered
+                        size={componentSize as SizeType}
+                        style={{marginTop:'50px'}}
+                        // tabBarStyle={{width: '100%',display: 'flex',justifyContent: 'space-around'}}
+                        items={[
+                          {
+                        label: 'Datos de Lenguajes',
+                        // label: (<span style={{ display: 'inline-block',width: '100px',textAlign: 'center',boxSizing: 'border-box'}}>Datos de Lenguajes</span>),
+                        key: '1',
+                        children: (
+                            
+                            <Table<DataTypePorcentajes> columns={columns} dataSource={dataporcentajes} onChange={onChange} size="small"/>
+                            
+                        ),
+                        },
+                        {
+                        label: 'Datos de Frameworks',
+                        //label: (<span style={{ display: 'inline-block',width: '100px',textAlign: 'center',boxSizing: 'border-box'}}>Datos de Frameworks</span>),
+                        key: '2',
+                        children: (
+                            
+                            <Table<DataTypeRespositorios>
                             bordered
                             columns={columnsrepositorios}
                             pagination={false} 
                            dataSource={processedData}
                            scroll={{ y: 'calc(500px)' }}
                         />
+                            
+                        ),
+                        }
+                        ]}
+                        >
+                          
+                        </Tabs>
                         </>
                       )
             }

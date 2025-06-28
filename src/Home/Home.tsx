@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
 import { Row, Col,Spin,FloatButton,Divider } from 'antd';
-import { SyncOutlined,PlusOutlined  } from '@ant-design/icons';
+import { SyncOutlined,PlusOutlined,GithubOutlined} from '@ant-design/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { UserContext } from '../context/UserContext';
 import './home.css'
@@ -26,6 +26,11 @@ const Home: React.FC = () => {
     handleChangeProyecto(0)
     addModulo({ title: 'Nuevo Registro' });
     navigate('/Registro')
+  }
+  const repositorios =()=>{
+    
+    addModulo({ title: 'Datos Repositorios' });
+    navigate('/Repositorios')
   }
   
   interface TagsType{
@@ -127,15 +132,18 @@ const Home: React.FC = () => {
 
         
         <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+          <FloatButton  
+                
+                icon={<GithubOutlined/>}     
+                tooltip={<div>Datos Repositorios</div>}
+                onClick={repositorios}
+            />
             <FloatButton  
                 type="primary" 
                 icon={<PlusOutlined  />} 
-    
                 tooltip={<div>Agregar Proyecto</div>}
                 onClick={registrar}
-
             />
-            
             <FloatButton.BackTop  />
         </FloatButton.Group>
         

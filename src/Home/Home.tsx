@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
-import { Row, Col,Spin,FloatButton,Divider } from 'antd';
+import { Row, Col,Spin,FloatButton,Divider,Descriptions } from 'antd';
 import { SyncOutlined,PlusOutlined,GithubOutlined} from '@ant-design/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { UserContext } from '../context/UserContext';
+
 import './home.css'
 
 const Home: React.FC = () => {
@@ -65,7 +66,7 @@ const Home: React.FC = () => {
         setLoading(true); 
         const body = {};
           
-        await new Promise(resolve => setTimeout(resolve, 4000));
+        
         const endpoint = `ListarProyectos/0/`;
         const result = await generarPeticion(endpoint, "GET", body);
         if (result.resp === 200) {
@@ -86,27 +87,11 @@ const Home: React.FC = () => {
 
     return (
       <div>
-        
-        
-        {/* {
-            loading ?(
-                // <Spin percent= 'auto'  size="large" fullscreen className="custom-spinner"  />
-                <Spin indicator={customIcon} fullscreen />
-            ):(
-                <Row gutter={[16, 16]}>
-                  {datasistemas.map((item) => (
-                  <Col key={item.id} xs={24} sm={12} md={8}>
-                      <CardSystem data={item} />
-                  </Col>
-                  ))}
-              </Row>
-            )
-        } */}
-
         {loading ? (
             <Spin indicator={customIcon} fullscreen />
           ) : (
             <div>
+              <Descriptions title="PROYECTOS"/>
               {(() => {
                 // Agrupamos los items en filas de a 3
                 const chunkedData = [];

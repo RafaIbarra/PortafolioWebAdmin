@@ -63,7 +63,7 @@ const InicioSesion: React.FC = () => {
            setLoading(true); 
            
               
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            // await new Promise(resolve => setTimeout(resolve, 4000));
             
             const result = await generarcomprobacion();
             

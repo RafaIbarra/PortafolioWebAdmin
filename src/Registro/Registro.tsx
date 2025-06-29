@@ -1,6 +1,6 @@
-import React,{useEffect,useState,useCallback } from 'react'
+import React,{useEffect,useState,useCallback  } from 'react'
 import { useNavigate } from "react-router-dom";
-import {Form,Input, Upload, Row, Col,Tabs,Select,Button,Space,Spin,message,Popconfirm   } from 'antd';
+import {Form,Input, Upload, Row, Col,Tabs,Select,Button,Space,Spin,message,Descriptions,FloatButton,Modal  } from 'antd';
 import { PlusOutlined,MinusCircleOutlined,DownloadOutlined,SyncOutlined,RollbackOutlined,DeleteOutlined  } from '@ant-design/icons';
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -382,6 +382,7 @@ const FormsTags: React.FC<FormTagsProps> = ({ detalle_tags, onUpdate }) => {
 
     );
  
+
 const Registro: React.FC = () => {
     const generarPeticion = useGenerarPeticion();
     const [componentSize] = useState('small')
@@ -389,7 +390,29 @@ const Registro: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [deletequestion,setDeletequestion]=useState(false)
     const [messageApi, contextHolder] = message.useMessage();
+    const [titulo,setTitulo]=useState('')
+    const [tituloeliminar,setTituloeliminar]=useState('')
+    const [modal, contextHoldermodal] = Modal.useModal();
 
+    const config = {
+        title: 'CONFIRMAR',
+        content: (
+            <>
+            <br />
+            {tituloeliminar}
+            <br />
+            <br />
+            </>
+        ),
+        };
+    const abrir_modal= async()=>{
+         const confirmed = await modal.confirm(config);
+         if(confirmed){
+            confirm()
+         
+         }
+            
+    }
     
     const navigate=useNavigate()
     const [proyectodata, setProyectodata] = useState<ProyectoData>({
@@ -563,17 +586,17 @@ const Registro: React.FC = () => {
         const cargardatos = async () => {
             setLoading(true); 
             if (idProyecto>0){
-               
+                
                 setDeletequestion(true)
                 const body = {};
-                
-                await new Promise(resolve => setTimeout(resolve, 4000));
                 const endpoint = `ListarProyectos/${idProyecto}/`;
                 const result = await generarPeticion(endpoint, "GET", body);
                 if (result.resp === 200) {
                 const data=result.data
-                
-                // actualizar_data('Sistema', data[0].Sistema);
+                const textotitulo=`ACTUALIZAR PROYECTO: ${data[0].Sistema}`
+                const textotitulodel=`DESEA ELIMINAR PROYECTO: ${data[0].Sistema}?`
+                setTitulo(textotitulo)
+                setTituloeliminar(textotitulodel)
                 setProyectodata( data[0]);
                 if (typeof data[0].Logo === "string") {
                     setFileList([
@@ -591,6 +614,8 @@ const Registro: React.FC = () => {
                     
                     // console.log(result)
                 }
+            }else{
+                setTitulo('NUEVO REGISTRO')
             }
             setLoading(false);
             
@@ -619,13 +644,14 @@ const Registro: React.FC = () => {
     return(
         <div >
             {contextHolder}
-            
+            {contextHoldermodal}
             
              {loading ? (
                         <Spin indicator={customIcon} fullscreen />
                       ) 
             : (
                 <>
+                <Descriptions title={titulo}/>
                 <Form layout="inline" size={componentSize as SizeType}>
                     
                     <Row gutter={[16, 16]} style={{ width: '100%', marginBottom: 24  }}>
@@ -759,30 +785,31 @@ const Registro: React.FC = () => {
                         }
                     ]}
                     />
-                <div style={{ display: 'flex', justifyContent: 'center'}}>
-                    <Button type="primary" icon={<DownloadOutlined />} size="large" onClick={registrar} style={{marginRight:'50px'}}>
-                        REGISTRAR
-                    </Button>
-                    <Button type="primary" icon={<RollbackOutlined />} size="large" onClick={atras} style={{marginRight:'50px'}}>
-                        CANCELAR
-                    </Button>
-                    {deletequestion &&(
+               
+                <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+                          <FloatButton  
+                                type="primary"
+                                icon={<DownloadOutlined/>}     
+                                tooltip={<span>Registrar datos</span>}
+                                onClick={registrar}
+                            />
+                            <FloatButton  
+                                type="primary" 
+                                icon={<RollbackOutlined  />} 
+                                tooltip={<span>Volver a Home</span>}
+                                onClick={atras}
+                            />
+                            {deletequestion &&(
+                                <FloatButton
+                                    icon={<DeleteOutlined style={{ color: 'red' }} />}
+                                    tooltip={<span>ELIMINAR</span>}
+                                    onClick={abrir_modal}
+                                
+                                />
+                            )}
+                            <FloatButton.BackTop  />
+                </FloatButton.Group>
 
-                    <Popconfirm
-                        title="Eliminar!"
-                        description="Desea eliminar el registro?"
-                        onConfirm={confirm}
-                        // onOpenChange={() => console.log('open change')}
-                        >
-                        {/* <Button type="primary">Open Popconfirm with Promise</Button> */}
-                        <Button color="danger" variant="solid" icon={<DeleteOutlined  />} size="large" >
-
-                        ELIMINAR
-                        </Button>
-
-                    </Popconfirm>
-                    )}
-                </div>
                 </>
             )}
 

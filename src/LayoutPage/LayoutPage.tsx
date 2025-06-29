@@ -13,12 +13,6 @@ const LayoutPage: React.FC = () => {
   const context = useContext(UserContext);
   if (!context) throw new Error("UserContext debe usarse dentro de UserProvider");
 
-  const { modulosistema } = useContext(UserContext)!;
-  
-  const breadcrumbItems = modulosistema.map(modulo => ({
-    title: modulo.title,
-  }));
-
   return (
     <Layout style={{
       minHeight: '97vh',
@@ -47,7 +41,7 @@ const LayoutPage: React.FC = () => {
               fontSize: '25px',
               width: '100%'
             }}
-            items={breadcrumbItems}
+            // items={breadcrumbItems}
           />
           <div
             style={{

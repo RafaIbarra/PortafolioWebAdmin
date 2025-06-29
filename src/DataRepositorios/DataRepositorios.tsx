@@ -1,18 +1,18 @@
 import React,{useEffect,useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import { useGenerarPeticion } from '../Apis/apipeticiones';
-import { SyncOutlined} from '@ant-design/icons';
-import { Spin,Table, Tooltip,Tabs,Form} from 'antd';
+import { SyncOutlined,CloudSyncOutlined,BackwardOutlined  } from '@ant-design/icons';
+import { Spin,Table, Descriptions,Tabs,Form,FloatButton} from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
 type SizeType = Parameters<typeof Form>[0]['size'];
+
+
 interface DataTypePorcentajes {
   key: React.Key;
   lenguaje: string;
   valor: number;
   
 }
-
-
 const columns: TableColumnsType<DataTypePorcentajes> = [
   {
     title: 'Lenguaje',
@@ -96,13 +96,6 @@ const columnsrepositorios: TableColumnsType<DataTypeRespositorios> = [
         }
     ];
 
-
-
-
-
-
-
-
 const DataRepositorios: React.FC = () => {
      const [loading, setLoading] = useState(true);
      const [dataporcentajes,setDataporcentajes]=useState<DataTypePorcentajes[]>([]);
@@ -125,11 +118,25 @@ const DataRepositorios: React.FC = () => {
     const onChange: TableProps<DataTypePorcentajes>['onChange'] = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
-     useEffect(() => {
-    
+    const sincronizar = async () => {
+          
+            setLoading(true); 
+            const body = {};
+              
             
-            
-        const cargardatos = async () => {
+            const endpoint = `RegistrarEstadisticasRepositorio/`;
+            const result = await generarPeticion(endpoint, "POST", body);
+            if (result.resp === 200) {
+             await cargardatos()
+                
+            }
+            else{
+                
+                 console.log(result)
+            }
+            setLoading(false);
+        };
+    const cargardatos = async () => {
           
             setLoading(true); 
             const body = {};
@@ -152,64 +159,102 @@ const DataRepositorios: React.FC = () => {
             }
             setLoading(false);
         };
-        cargardatos()
-        
+    useEffect(() => {
+        const fetchData = async () => {
+          await cargardatos();
+        };
+        fetchData();
       }, []);
     return(
         <div>
-            <button onClick={atras}>atras</button>
+            
             {loading ? (
                         <Spin indicator={customIcon} fullscreen />
                       ) : 
                       (
                         <>
                         
-                        <span> Utima Actualizacion: {fechaactualizacion} </span>
-                        <a
-                           href="https://github.com/RafaIbarra" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                        >
-                          https://github.com/RafaIbarra
-                        </a>
-
+                        <Descriptions title="Datos repositorio">
+                          <Descriptions.Item label="Ultima actualizacion">{fechaactualizacion}</Descriptions.Item>
+                          <Descriptions.Item label="Perfil">
+                            <a 
+                              href="https://github.com/RafaIbarra" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                            >
+                              https://github.com/RafaIbarra
+                            </a>
+                          </Descriptions.Item>
+                        </Descriptions>
                         <Tabs
-                         type="card"
-                        //centered
-                        size={componentSize as SizeType}
-                        style={{marginTop:'50px'}}
-                        // tabBarStyle={{width: '100%',display: 'flex',justifyContent: 'space-around'}}
-                        items={[
-                          {
-                        label: 'Datos de Lenguajes',
-                        // label: (<span style={{ display: 'inline-block',width: '100px',textAlign: 'center',boxSizing: 'border-box'}}>Datos de Lenguajes</span>),
-                        key: '1',
-                        children: (
+                            type="card"
                             
-                            <Table<DataTypePorcentajes> columns={columns} dataSource={dataporcentajes} onChange={onChange} size="small"/>
+                            size={componentSize as SizeType}
+                            style={{ marginTop: '10px', height: '500px', display: 'flex', flexDirection: 'column' }}
                             
-                        ),
-                        },
-                        {
-                        label: 'Datos de Frameworks',
-                        //label: (<span style={{ display: 'inline-block',width: '100px',textAlign: 'center',boxSizing: 'border-box'}}>Datos de Frameworks</span>),
-                        key: '2',
-                        children: (
-                            
-                            <Table<DataTypeRespositorios>
-                            bordered
-                            columns={columnsrepositorios}
-                            pagination={false} 
-                           dataSource={processedData}
-                           scroll={{ y: 'calc(500px)' }}
-                        />
-                            
-                        ),
-                        }
-                        ]}
-                        >
+                            items={[
+                                    {
+                                        label: 'Datos de Lenguajes',
+                                        
+                                        key: '1',
+                                        children: (
+                                            <div style={{ flex: 1,display: 'flex',flexDirection: 'column',minHeight: 0, }}>
+                                              <div style={{ flex: 1 }}>
+                                                <Table<DataTypePorcentajes>
+                                                columns={columns}
+                                                dataSource={dataporcentajes}
+                                                onChange={onChange}
+                                                size="small"
+                                                pagination={false}
+                                                scroll={{ y: 400 }} 
+                                                rowKey="lenguaje"
+                                              />
+                                              </div>
+                                            </div>
+                                          ),
+                                    },
+                                    {
+                                        label: 'Datos de Frameworks',
+                                        key: '2',
+                                        children: (
+                                            <div style={{ flex: 1,display: 'flex',flexDirection: 'column',minHeight: 0, }}>
+                                              <div style={{ flex: 1 }}>
+                                                <Table<DataTypeRespositorios>
+                                                  bordered
+                                                  columns={columnsrepositorios}
+                                                  pagination={false}
+                                                  dataSource={processedData}
+                                                  scroll={{ y: 400 }} 
+                                                  size="small"
+                                                  rowKey="NombreRepositorio"
+                                                />
+                                              </div>
+                                            </div>
+                                          ),
+                                    }
+                                  ]}
+                            >
                           
                         </Tabs>
+
+                        <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+                          <FloatButton  
+                                type="primary"
+                                icon={<CloudSyncOutlined/>}     
+                                tooltip={<span>Sincronizar datos</span>}
+                                onClick={sincronizar}
+                            />
+                            <FloatButton  
+                                type="primary" 
+                                icon={<BackwardOutlined  />} 
+                                tooltip={<span>Volver a Home</span>}
+                                onClick={atras}
+                            />
+                            <FloatButton.BackTop  />
+                        </FloatButton.Group>
+
+
+                        
                         </>
                       )
             }

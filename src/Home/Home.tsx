@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import { useGenerarPeticion } from '../Apis/apipeticiones';
 import CardSystem from '../Componentes/CardSystem';
-import { Row, Col,Spin,FloatButton,Divider,Descriptions } from 'antd';
-import { SyncOutlined,PlusOutlined,GithubOutlined} from '@ant-design/icons';
+import { Row, Col,Spin,FloatButton,Divider,Descriptions,Modal,Upload,Button,message } from 'antd';
+import { SyncOutlined,PlusOutlined,GithubOutlined,FilePdfOutlined,UploadOutlined,EyeOutlined } from '@ant-design/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { UserContext } from '../context/UserContext';
+import { APIBASE } from '../Apis/config';
 
 import './home.css'
 
@@ -16,6 +17,11 @@ const Home: React.FC = () => {
   const [datasistemas, setDatasistemas] = useState<DataType[]>([]); 
   const [__idProyecto, setIdProyecto] = useLocalStorage<number>('id_proyecto', 0);
   const [loading, setLoading] = useState(true);
+
+  // Estado modal subir CV
+  const [modalCvVisible, setModalCvVisible] = useState(false);
+  const [archivoPdf, setArchivoPdf] = useState<File | null>(null);
+  const [subiendoCv, setSubiendoCv] = useState(false);
  
   const navigate=useNavigate()
 
@@ -33,6 +39,40 @@ const Home: React.FC = () => {
     addModulo({ title: 'Datos Repositorios' });
     navigate('/Repositorios')
   }
+
+  // Abrir CV en nueva pestaña
+  const verCurriculum = () => {
+    window.open(`${APIBASE}/CurriculumData/NO`, '_blank');
+  };
+
+  // Manejo del modal de subida de CV
+  const abrirModalCv = () => {
+    setArchivoPdf(null);
+    setModalCvVisible(true);
+  };
+
+  const cerrarModalCv = () => {
+    setArchivoPdf(null);
+    setModalCvVisible(false);
+  };
+
+  const handleSubirCv = async () => {
+    if (!archivoPdf) {
+      message.warning('Seleccioná un archivo PDF antes de continuar.');
+      return;
+    }
+    setSubiendoCv(true);
+    const body = { archivo: archivoPdf };
+    const result = await generarPeticion('subir-cv/', 'POST', body);
+    setSubiendoCv(false);
+    if (result.resp === 200 || result.resp === 201) {
+      message.success('CV subido correctamente.');
+      cerrarModalCv();
+      navigate('/');
+    } else {
+      message.error('Error al subir el CV. Intentá nuevamente.');
+    }
+  };
   
   interface TagsType{
     id :number,
@@ -123,6 +163,16 @@ const Home: React.FC = () => {
                 tooltip={<div>Datos Repositorios</div>}
                 onClick={repositorios}
             />
+            <FloatButton
+                icon={<EyeOutlined />}
+                tooltip={<div>Ver Curriculum</div>}
+                onClick={verCurriculum}
+            />
+            <FloatButton
+                icon={<FilePdfOutlined />}
+                tooltip={<div>Subir CV (PDF)</div>}
+                onClick={abrirModalCv}
+            />
             <FloatButton  
                 type="primary" 
                 icon={<PlusOutlined  />} 
@@ -131,7 +181,46 @@ const Home: React.FC = () => {
             />
             <FloatButton.BackTop  />
         </FloatButton.Group>
-        
+
+        {/* Modal para subir CV */}
+        <Modal
+          title="Subir Curriculum (PDF)"
+          open={modalCvVisible}
+          onCancel={cerrarModalCv}
+          footer={[
+            <Button key="cancelar" onClick={cerrarModalCv} disabled={subiendoCv}>
+              Cancelar
+            </Button>,
+            <Button
+              key="subir"
+              type="primary"
+              icon={<UploadOutlined />}
+              loading={subiendoCv}
+              onClick={handleSubirCv}
+              disabled={!archivoPdf}
+            >
+              Subir CV
+            </Button>,
+          ]}
+        >
+          <Upload
+            accept=".pdf"
+            maxCount={1}
+            beforeUpload={(file) => {
+              const esPdf = file.type === 'application/pdf';
+              if (!esPdf) {
+                message.error('Solo se permiten archivos PDF.');
+                return Upload.LIST_IGNORE;
+              }
+              setArchivoPdf(file);
+              return false; // Evita la subida automática
+            }}
+            onRemove={() => setArchivoPdf(null)}
+            fileList={archivoPdf ? [{ uid: '-1', name: archivoPdf.name, status: 'done' }] : []}
+          >
+            <Button icon={<FilePdfOutlined />}>Seleccionar PDF</Button>
+          </Upload>
+        </Modal>
        
       </div>
     ) 
